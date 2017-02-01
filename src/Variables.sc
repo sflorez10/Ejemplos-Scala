@@ -2,6 +2,9 @@
 var x : Int = 4
 x = 5
 
+//Las variables pueden ser privadas
+private var pr : Double = 1.6
+
 //Inicializar constantes
 val v : String = "Inmutable"
 //v = "Error"
