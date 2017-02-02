@@ -31,7 +31,7 @@ Declaracion.main()
 object Herencia{
   abstract class Animal(cPatas:Int, val sonido:String){
 
-    var patas = cPatas
+    protected var patas : Int = cPatas
 
     private def metodoPrivado(x:Int): Unit ={
       println("metodo privado " + x)
@@ -39,6 +39,7 @@ object Herencia{
 
     protected def metodoProtegido(x:Int):Unit={
       patas = 6
+      println("patas protected " + patas)
     }
 
     def metodoPublico(x:Int):Unit={
@@ -46,16 +47,18 @@ object Herencia{
     }
   }
 
-  class Perro(patas:Int, sonido:String, val cDomestico: Boolean)
-    extends Animal(patas, sonido){
+  class Perro(cPatas:Int, sonido:String, val cDomestico: Boolean)
+    extends Animal(cPatas, sonido){
 
     val domestico = cDomestico
 
     override def metodoProtegido(x:Int){
       super.metodoProtegido(x)
-      println("patas " + patas)
-      //patas = 5 //patas es inmutable en Animal
-      println("patitas " + patas)
+      println("patas instancia " + patas)
+    }
+
+    override def toString() : String = {
+      patas + " " + sonido + " " + domestico
     }
   }
 
@@ -64,11 +67,62 @@ object Herencia{
     val perro = new Perro(4, "roof", true)
     perro.metodoPublico(1)
     perro.metodoProtegido(1)
+    println(perro)
     //perro.metodoPrivado(1) no es posible
   }
 }
 
 Herencia.main()
+
+
+object Interfaces{
+  //Trait concepto similar a interfaz. Puede ser parcialmente implementada
+  trait Similaridad {
+    def esSimilar(x: Any): Boolean //no implementado
+    def noEsSimilar(x: Any): Boolean = !esSimilar(x) //implementado
+  }
+
+  class Rectangulo(cX:Int, cY:Int) extends Similaridad{
+    val x = cX
+    val y = cY
+    def esSimilar(z: Any) =
+      //Cast se hace con el metodo asInstanceOf[<Clase>]
+      z.isInstanceOf[Rectangulo] && z.asInstanceOf[Rectangulo].x == x
+  }
+}
+
+//Mezcla de implementaciones entre clases (Delta de implementaciones)
+object Mixins{
+
+  //Clase abstracta
+  abstract class AbsIterator {
+    type T
+    def hasNext: Boolean
+    def next: T
+  }
+
+  //Mixins deben ser creados como trait
+  trait RichIterator extends AbsIterator {
+    def foreach(f: T => Unit) { while (hasNext) f(next) }
+  }
+
+  class StringIterator(s: String) extends AbsIterator {
+    type T = Char
+    private var i = 0
+    def hasNext = i < s.length()
+    def next = { val ch = s charAt i; i += 1; ch }
+  }
+
+  object StringIteratorTest {
+    def main(args: Array[String]) {
+      //Iter hereda de StringIterator mixin con RichIterator
+      class Iter extends StringIterator(args(0)) with RichIterator
+      val iter = new Iter
+      //Iter ahora hace uso de funcion presente en richiterator
+      iter foreach println
+    }
+  }
+}
 
 
 
