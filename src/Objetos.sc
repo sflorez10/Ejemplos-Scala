@@ -124,5 +124,27 @@ object Mixins{
   }
 }
 
+/*
+*Case Classes
+* Son inmutables
+* Comparacion por estructura y no referencia
+*/
+case class Triangulo(l1:Double, l2: Double, l3: Double)
+val triangulo1 = Triangulo(2.0,3,4)//no se usa new
+val triangulo2 = Triangulo(2.0,3,4)
+val triangulo3 = Triangulo(1.0,3,4)
+println(triangulo1 == triangulo2)
+println(triangulo1 == triangulo3)
+
+object Twice {
+  def apply(x: Int): Int = x * 2
+  def unapply(z: Int): Option[Int] = if (z%2 == 0) Some(z/2) else None
+}
+object TwiceTest {
+  val x = Twice(21)
+  x match { case Twice(n) => Console.println(n) } // prints 21
+}
+TwiceTest
+
 
 
