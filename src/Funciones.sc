@@ -59,3 +59,18 @@ def capitalizeAll(args: String*) = {
   }
 }
 println(capitalizeAll("carro", "casa"));
+
+//composicion de funciones
+def list(s:String):List[Char]={
+  s.toList
+}
+
+def mayuscula(l:List[Char]):List[Char]={
+  l map (_.toUpper)
+}
+
+var listMayuscula = mayuscula _ compose list _
+listMayuscula("Casa")
+
+var listMayuscula2 = list _ andThen mayuscula _
+listMayuscula("Perro")
